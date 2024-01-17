@@ -1,10 +1,12 @@
-name: block-explorer
+version: '3.2'
+
+#name: block-explorer
 services:
   app:
     build:
       context: .
       dockerfile: ./packages/app/Dockerfile
-      target: development-stage
+#      target: development-stage
     command: npm run --prefix packages/app dev -- --host
     ports:
       - '3010:3010'
@@ -19,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: ./packages/worker/Dockerfile
-      target: development-stage
+#      target: development-stage
     command: npm run --prefix packages/worker dev:debug
     environment:
       - PORT=3001
@@ -47,7 +49,7 @@ services:
     build:
       context: .
       dockerfile: ./packages/api/Dockerfile
-      target: development-stage
+#      target: development-stage
     command: npm run --prefix packages/api dev:debug
     environment:
       - PORT=3020
