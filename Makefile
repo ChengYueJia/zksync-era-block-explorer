@@ -4,6 +4,11 @@ help: ## Display this help screen
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
+
+init: ## init
+	@npm install
+	@npm run hyperchain:configure
+
 query_l1: ## query from l1
 	@cd ../ && ./web3/web3 --rpc-url http://localhost:8545 balance  0x618263CE921F7dd5F4f40C29f6c524Aaf97b9bbd && cd local-setup
 

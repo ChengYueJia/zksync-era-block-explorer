@@ -1,28 +1,18 @@
-version: '3.2'
+version: "3.2"
 
-#name: block-explorer
 services:
   app:
-    build:
-      context: .
-      dockerfile: ./packages/app/Dockerfile
-      target: development-stage
-    command: npm run --prefix packages/app dev -- --host
+    platform: linux/amd64
+    image: "matterlabs/block-explorer-app:latest"
     ports:
       - '3010:3010'
-    volumes:
-      - ./packages/app:/usr/src/app/packages/app
-      - /usr/src/app/packages/app/node_modules
     depends_on:
       - api
     restart: unless-stopped
 
   worker:
-    build:
-      context: .
-      dockerfile: ./packages/worker/Dockerfile
-      target: development-stage
-    command: npm run --prefix packages/worker dev:debug
+    platform: linux/amd64
+    image: "matterlabs/block-explorer-worker:latest"
     environment:
       - PORT=3001
       - LOG_LEVEL=verbose
@@ -38,20 +28,14 @@ services:
       - '3001:3001'
       - '9229:9229'
       - '9230:9230'
-    volumes:
-      - ./packages/worker:/usr/src/app/packages/worker
-      - /usr/src/app/packages/worker/node_modules
     depends_on:
       zksync:
         condition: service_healthy
     restart: unless-stopped
 
   data-fetcher:
-    build:
-      context: .
-      dockerfile: ./packages/data-fetcher/Dockerfile
-      target: development-stage
-    command: npm run --prefix packages/data-fetcher dev:debug
+    platform: linux/amd64
+    image: "matterlabs/block-explorer-data-fetcher:latest"
     environment:
       - PORT=3040
       - LOG_LEVEL=verbose
@@ -59,22 +43,14 @@ services:
       - BLOCKCHAIN_RPC_URL=http://zksync:3050
     ports:
       - '3040:3040'
-      - '9231:9229'
-      - '9232:9230'
-    volumes:
-      - ./packages/data-fetcher:/usr/src/app/packages/data-fetcher
-      - /usr/src/app/packages/data-fetcher/node_modules
     depends_on:
       zksync:
         condition: service_healthy
     restart: unless-stopped
 
   api:
-    build:
-      context: .
-      dockerfile: ./packages/api/Dockerfile
-      target: development-stage
-    command: npm run --prefix packages/api dev:debug
+    platform: linux/amd64
+    image: "matterlabs/block-explorer-api:latest"
     environment:
       - PORT=3020
       - METRICS_PORT=3005
@@ -83,12 +59,6 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/block-explorer
     ports:
       - '3020:3020'
-      - '3005:3005'
-      - '9233:9229'
-      - '9234:9230'
-    volumes:
-      - ./packages/api:/usr/src/app/packages/api
-      - /usr/src/app/packages/api/node_modules
     depends_on:
       - worker
     restart: unless-stopped
@@ -96,7 +66,7 @@ services:
   postgres:
     image: "postgres:14"
     logging:
-      driver: none 
+      driver: none
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:

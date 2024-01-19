@@ -10,7 +10,7 @@ COPY --chown=node:node lerna.json ./
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node ./packages/worker/package*.json ./packages/worker/
 RUN npm ci --ignore-scripts --only=production && npm cache clean --force
-COPY --chown=node:node ./packages/worker/. ./packages/worker
+COPY --chown=node:node ./packages/worker ./packages/worker
 RUN rm -f .npmrc
 
 FROM base-stage AS development-stage
